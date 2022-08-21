@@ -1,0 +1,46 @@
+public class DisplayPairs extends AppCompatActivity {
+    TextView s11TextView;
+    TextView s12TextView;
+    TextView s21TextView;
+    TextView s22TextView;
+    TextView s31TextView;
+    TextView s32TextView;
+    Button backButton;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_display_pairs);
+        getSupportActionBar().hide();
+        s11TextView = (TextView) findViewById(R.id.s11TextView);
+        s12TextView = (TextView) findViewById(R.id.s12TextView);
+        s21TextView = (TextView) findViewById(R.id.s21TextView);
+        s22TextView = (TextView) findViewById(R.id.s22TextView);
+        s31TextView = (TextView) findViewById(R.id.s31TextView);
+        s32TextView = (TextView) findViewById(R.id.s32TextView);
+        backButton = (Button)findViewById(R.id.backButton);
+        String response = getIntent().getStringExtra("result");
+        try{
+        JSONObject pairs = new JSONObject(response);
+        s11TextView.setText(pairs.getString("s11"));
+        s12TextView.setText(pairs.getString("s12"));
+        s21TextView.setText(pairs.getString("s21"));
+        s22TextView.setText(pairs.getString("s22"));
+        s31TextView.setText(pairs.getString("s31"));
+        s32TextView.setText(pairs.getString("s32"));
+        }
+        catch(Exception e){
+
+        }
+        backButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                Intent in = new Intent(getApplicationContext(),GetPairs.class);
+                startActivity(in);
+
+            }
+        });
+
+    }
+}
