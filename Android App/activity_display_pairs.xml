@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:background="@color/colorPrimaryDark"
+    android:orientation="vertical"
+    tools:context=".Menu">
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Enter Dates"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="@color/textcolor"
+            android:textSize="30dp"
+            android:textStyle="normal"
+            android:typeface="normal" />
+    </LinearLayout>
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/graylight"
+        android:orientation="vertical">
+
+
+    </LinearLayout>
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/fromDateButton"
+            style="@style/Widget.AppCompat.Button.Colored"
+
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="100dp"
+            android:layout_marginLeft="45dp"
+            android:background="@drawable/buttonstyle"
+            android:radius="45dp"
+            android:text="From"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/fromDateTextView"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="45dp"
+            android:layout_marginTop="100dp"
+            android:textColor="@color/textcolor"
+            android:textSize="20sp" />
+    </LinearLayout>
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/toDateButton"
+            style="@style/Widget.AppCompat.Button.Colored"
+
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="80dp"
+            android:layout_marginLeft="45dp"
+            android:background="@drawable/buttonstyle"
+            android:radius="45dp"
+            android:text="To"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+
+
+        <TextView
+            android:id="@+id/toDateTextView"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="45dp"
+            android:layout_marginTop="80dp"
+            android:textColor="@color/textcolor"
+            android:textSize="20sp" />
+    </LinearLayout>
+    <LinearLayout
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+
+    <Button
+        android:id="@+id/backButton"
+        style="@style/Widget.AppCompat.Button.Colored"
+
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="60dp"
+        android:background="@drawable/buttonstyle2"
+        android:radius="45dp"
+        android:text="Back"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+        <Button
+            android:id="@+id/goButton"
+            style="@style/Widget.AppCompat.Button.Colored"
+
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="80dp"
+            android:layout_marginLeft="45dp"
+            android:background="@drawable/buttonstyle2"
+            android:radius="45dp"
+            android:text="Go"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:visibility="gone"/>
+
+</LinearLayout>

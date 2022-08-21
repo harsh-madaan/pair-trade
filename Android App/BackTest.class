@@ -1,0 +1,227 @@
+public class BackTest extends AppCompatActivity {
+    Button backButton;
+    Button fromDateButton;
+    Button toDateButton;
+    Button goButton;
+    TextView fromDateTextView;
+    TextView toDateTextView;
+    ProgressBar progressBar;
+    static final String API_URL = "https://trade-pairs1.herokuapp.com/btpair";
+    JSONObject jsonRequest = new JSONObject();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_back_test);
+        getSupportActionBar().hide();
+
+        final Spinner stock1 = (Spinner) findViewById(R.id.stock1);
+        final Spinner stock2 = (Spinner) findViewById(R.id.stock2);
+        final Spinner risk = (Spinner)findViewById(R.id.risk);
+
+
+
+        String[] stocks = new String[]{
+                "HDFC", "ICICI", "AXISBANK", "KOTAK", "SBIN", "INDUSIND", "YESBANK", "BANKOFBARODA", "FEDERALBANK",
+                "PNB", "CANARABANK"
+        };
+
+        final String[] risks = new String[]{
+                "Low","Neutral","High"
+        };
+
+
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
+                this,R.layout.spinner_item,stocks
+        );
+        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
+        stock1.setAdapter(spinnerArrayAdapter);
+        stock2.setAdapter(spinnerArrayAdapter);
+        ArrayAdapter<String> spinnerArrayAdapter2 = new ArrayAdapter<String>(
+                this,R.layout.spinner_item,risks
+        );
+        risk.setAdapter(spinnerArrayAdapter2);
+
+        backButton = (Button)findViewById(R.id.backButton);
+        fromDateButton= (Button)findViewById(R.id.fromDateButton);
+        toDateButton = (Button)findViewById(R.id.toDateButton);
+        goButton = (Button) findViewById(R.id.goButton);
+        fromDateTextView = (TextView)findViewById(R.id.fromDateTextView);
+        toDateTextView = (TextView)findViewById(R.id.toDateTextView);
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+
+        fromDateButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+
+                Calendar mcurrentDate=Calendar.getInstance();
+                int year = mcurrentDate.get(Calendar.YEAR);
+                int month = mcurrentDate.get(Calendar.MONTH);
+                int day = mcurrentDate.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog mDatePicker=new DatePickerDialog(BackTest.this, new DatePickerDialog.OnDateSetListener() {
+                    public void onDateSet(DatePicker datepicker, int selectedYear, int selectedMonth, int selectedDay) {
+                        // TODO Auto-generated method stub
+
+                        Log.e("Date Selected", "Month: " + selectedMonth + " Day: " + selectedDay + " Year: " + selectedYear);
+                        fromDateTextView.setText(selectedMonth+1 + "/" + selectedDay + "/" + selectedYear);
+                        try{
+                            jsonRequest.put("startyear", selectedYear);
+                            jsonRequest.put("startmonth",selectedMonth+1);
+                            jsonRequest.put("startday", selectedDay);}
+                        catch(Exception e) {
+                            Log.e("ERROR", e.getMessage(), e);
+
+                        }
+                    }
+                },year, month, day);
+                mDatePicker.setTitle("Select Date");
+                mDatePicker.show();
+            }
+        });
+        toDateButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+
+                Calendar mcurrentDate=Calendar.getInstance();
+                int year = mcurrentDate.get(Calendar.YEAR);
+                int month = mcurrentDate.get(Calendar.MONTH);
+                int day = mcurrentDate.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog mDatePicker=new DatePickerDialog(BackTest.this, new DatePickerDialog.OnDateSetListener() {
+                    public void onDateSet(DatePicker datepicker, int selectedYear, int selectedMonth, int selectedDay) {
+                        // TODO Auto-generated method stub
+
+                        Log.e("Date Selected", "Month: " + selectedMonth + " Day: " + selectedDay + " Year: " + selectedYear);
+                        toDateTextView.setText(selectedMonth+1 + "/" + selectedDay + "/" + selectedYear);
+                        try{
+                            jsonRequest.put("endyear", selectedYear);
+                            jsonRequest.put("endmonth",selectedMonth+1);
+                            jsonRequest.put("endday", selectedDay);}
+                        catch(Exception e) {
+                            Log.e("ERROR", e.getMessage(), e);
+
+                        }
+                    }
+                },year, month, day);
+                mDatePicker.setTitle("Select Date");
+                mDatePicker.show();
+            }
+        });
+        backButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                Intent in = new Intent(getApplicationContext(),Menu.class);
+                startActivity(in);
+
+            }
+        });
+        goButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String s1 = stock1.getSelectedItem().toString();
+                String s2 = stock2.getSelectedItem().toString();
+                String r = risk.getSelectedItem().toString();
+                double zscores[] = new double[2];
+                switch(r){
+                    case "Low":
+                        zscores[0] = 2.0;
+                        zscores[1] = 0.75;
+                        break;
+                    case "Neutral":
+                        zscores[0] = 1.5;
+                        zscores[1] = 0.4;
+                        break;
+                    case "High":
+                        zscores[0] = 1;
+                        zscores[1] = 0.2;
+                }
+                Log.i("Z",s1+" "+zscores[0]+" "+zscores[1]);
+                try{
+                jsonRequest.put("stock1",s1);
+                jsonRequest.put("stock2",s2);
+                jsonRequest.put("risk_level",r);
+                jsonRequest.put("enter_z",Double.toString(zscores[0]));
+                jsonRequest.put("exit_z",Double.toString(zscores[1]));
+                }
+                catch(Exception e){
+
+                }
+                Log.i("INFO", s1+s2);
+                new RetrieveFeedTask().execute();
+            }
+        });
+    }
+    class RetrieveFeedTask extends AsyncTask<Void, Void, String> {
+
+
+
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+
+        }
+
+        protected String doInBackground(Void... urls) {
+            String returndata = "";
+
+            try {
+                URL url = new URL(API_URL);
+                HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+                urlConnection.setRequestMethod("POST");   //POST or GET
+                urlConnection.connect();
+
+
+
+
+                OutputStreamWriter out = new OutputStreamWriter(urlConnection.getOutputStream());
+                out.write(jsonRequest.toString());
+                out.close();
+
+                int statusCode = urlConnection.getResponseCode();
+                String statusMsg = urlConnection.getResponseMessage();
+
+
+                if (statusCode == 200) {
+                    Log.e("success","Success");
+                    InputStream it = new BufferedInputStream(urlConnection.getInputStream());
+                    InputStreamReader read = new InputStreamReader(it);
+                    BufferedReader buff = new BufferedReader(read);
+                    StringBuilder dta = new StringBuilder();
+                    String chunks;
+                    while ((chunks = buff.readLine()) != null) {
+                        dta.append(chunks);
+                    }
+                    returndata = dta.toString();
+
+
+                } }
+
+
+
+            catch(Exception e) {
+                Log.e("ERROR", e.getMessage(), e);
+                return null;
+            }
+            return returndata;
+        }
+
+        protected void onPostExecute(String response)  {
+            if(response == null) {
+                response = "THERE WAS AN ERROR";
+            }
+            progressBar.setVisibility(View.GONE);
+            
+
+
+            Intent in = new Intent(getApplicationContext(),DisplayResults.class);
+            in.putExtra("result",response);
+            startActivity(in);
+        }}
+}

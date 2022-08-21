@@ -1,0 +1,97 @@
+public class Menu extends AppCompatActivity {
+
+@Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_menu);
+        getSupportActionBar().hide();
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            // Start sign in/sign up activity
+            startActivityForResult(
+                    AuthUI.getInstance()
+                            .createSignInIntentBuilder()
+                            .build(),
+                    1
+            );
+        } else {
+
+ Toast.makeText(this,
+                    "Welcome " + FirebaseAuth.getInstance()
+                            .getCurrentUser()
+                            .getDisplayName(),
+                    Toast.LENGTH_LONG)
+                    .show();
+
+            // Load chat room contents
+        }
+
+        Button getPairButton = (Button)findViewById(R.id.getPairButton);
+        Button btButton = (Button)findViewById(R.id.btButton);
+        Button soButton = (Button)findViewById(R.id.signOutButton);
+        getPairButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                Intent in = new Intent(getApplicationContext(),GetPairs.class);
+                startActivity(in);
+
+            }
+        });
+        btButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                Intent in = new Intent(getApplicationContext(),BackTest.class);
+                startActivity(in);
+
+            }
+        });
+        soButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (v.getId() == R.id.signOutButton){
+                AuthUI.getInstance().signOut(Menu.this)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(Menu.this,
+                                        "Signed Out",
+                                        Toast.LENGTH_LONG)
+                                        .show();
+
+                                
+                                startActivity(new Intent(Menu.this, Menu.class));
+                                finish();
+                            }
+                        });
+
+            }}
+        });}
+
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 1) {
+            if(resultCode == RESULT_OK) {
+                Toast.makeText(this,
+                        "Welcome "+FirebaseAuth.getInstance()
+                                .getCurrentUser()
+                                .getDisplayName(),
+                        Toast.LENGTH_LONG)
+                        .show();
+
+            } else {
+                Toast.makeText(this,
+                        "Couldn't Sign In",
+                        Toast.LENGTH_LONG)
+                        .show();
+
+               
+                finish();
+            }
+        }
+}}

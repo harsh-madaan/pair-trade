@@ -1,0 +1,50 @@
+public class DisplayResults extends AppCompatActivity {
+    TextView text1;
+    TextView returns;
+    TextView total_val;
+    TextView pl;
+    Button backButton;
+    TextView risk;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_display_results);
+        getSupportActionBar().hide();
+        String response = getIntent().getStringExtra("result");
+
+        text1 = (TextView)findViewById(R.id.results);
+        returns = (TextView)findViewById(R.id.returnsTextView);
+        pl = (TextView)findViewById(R.id.plTextView);
+        total_val = (TextView)findViewById(R.id.finalCapitalTextView);
+        backButton = (Button)findViewById(R.id.backButton);
+        risk = (TextView)findViewById(R.id.riskLevelTextView);
+        try{
+            JSONObject trades = new JSONObject(response);
+            int len =trades.length();
+            String results ="";
+            for(int i=0;i<len-4;i++){
+                Log.i("Trades",results);
+                results+=trades.getString(Integer.toString(i+1));
+            }
+
+            text1.setText(results);
+            returns.setText(trades.getString(Integer.toString(trades.length()-1)));
+            total_val.setText(trades.getString(Integer.toString(trades.length()-2)));
+            pl.setText(trades.getString(Integer.toString(trades.length()-3)));
+            risk.setText(trades.getString(Integer.toString(trades.length())));
+        }
+        catch (Exception e){
+            Log.e("Error","Oh no");
+        }
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                Intent in = new Intent(getApplicationContext(),BackTest.class);
+                startActivity(in);
+
+            }
+        });  }  }
+
